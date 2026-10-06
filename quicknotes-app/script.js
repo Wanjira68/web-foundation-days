@@ -4,9 +4,10 @@ const noteCategory = document.querySelector("#note-category");
 const notesList = document.querySelector("#notes-list");
 const errorMessage = document.querySelector("#error-message");
 const noteCount = document.querySelector("#note-count");
+const searchInput = document.querySelector("#search-input");
 let notes = [];
 
-function render() {
+function render(searchTerm = "") {
     notesList.innerHTML = "";
 if (notes.length === 0) {
     noteCount.textContent = "You have no notes yet.";
@@ -15,7 +16,18 @@ if (notes.length === 0) {
 } else {
     noteCount.textContent = `You have ${notes.length} notes.`;
 }
-    notes.forEach(function(note) {
+   const filteredNotes = notes.filter(function(note) {
+    return note.text.toLowerCase().includes(searchTerm.toLowerCase());
+});
+
+if (searchTerm !== "" && filteredNotes.length === 0) {
+    const noResults = document.createElement("li");
+    noResults.textContent = "No notes match your search.";
+    notesList.appendChild(noResults);
+    return;
+}
+
+filteredNotes.forEach(function(note) {
         const listItem = document.createElement("li");
         listItem.classList.add(`category-${note.category}`);
 
@@ -34,6 +46,7 @@ if (notes.length === 0) {
     notes = notes.filter(function(item) {
         return item.id !== note.id;
     });
+    localStorage.setItem("quickNotes", JSON.stringify(notes));
 
     render();
 });
@@ -68,9 +81,21 @@ errorMessage.textContent = "";
         createdAt: new Date().toLocaleString()
     };
 
-    notes.push(note);
+  notes.push(note);
 
-    render();
+localStorage.setItem("quickNotes", JSON.stringify(notes));
+
+render();
 
     noteInput.value = "";
+});
+const savedNotes = localStorage.getItem("quickNotes");
+
+if (savedNotes) {
+    notes = JSON.parse(savedNotes);
+}
+
+render();
+searchInput.addEventListener("input", function() {
+    render(searchInput.value);
 });
