@@ -23,9 +23,39 @@ This REST API allows users to manage books in a library.
 - **Method:** POST
 - **Path:** `/books`
 - **Description:** Creates a new book.
-- **Example request body:**
-  ```json
-  {
-    "title": "Things Fall Apart",
-    "author": "Chinua Achebe"
-  }
+- **Example request body:** `{"title":"Things Fall Apart","author":"Chinua Achebe"}`
+- **Success status:** `201 Created`
+
+### 4. Update a book
+
+- **Method:** PUT
+- **Path:** `/books/{id}`
+- **Description:** Updates an existing book using its ID.
+- **Example request body:** `{"title":"Things Fall Apart","author":"Chinua Achebe"}`
+- **Success status:** `200 OK`
+
+### 5. Delete a book
+
+- **Method:** DELETE
+- **Path:** `/books/{id}`
+- **Description:** Deletes a book using its ID.
+- **Success status:** `204 No Content`
+
+### 6. List books by author
+
+- **Method:** GET
+- **Path:** `/books?author=Chinua%20Achebe`
+- **Description:** Returns books written by the specified author using the author query parameter.
+- **Success status:** `200 OK`
+
+## Error Codes
+
+### 400 Bad Request
+
+- **Description:** The request contains invalid or missing data.
+- **Example:** A POST request tries to create a book without a title.
+
+### 404 Not Found
+
+- **Description:** The requested book does not exist.
+- **Example:** A GET request tries to retrieve `/books/999` when book 999 does not exist.
